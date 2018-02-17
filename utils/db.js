@@ -9,9 +9,9 @@ const getCache = (key) => {
         .findOne({'key': key})
         .then(cache => {
             // check if the cache entry has expired if it hasn't, update the expiry date if
-            // it has, generate a new cache value and update the expiry date. Return the
-            // new value
-            if(!cache){
+            // it has, generate a new cache value and update the expiry date. Return the new
+            // value
+            if (!cache) {
                 return null
             }
             if (_checkExpiry(cache.expiryDate)) {
@@ -32,9 +32,13 @@ const getCache = (key) => {
             /**
              * Here the cache expiry time hasn't been reached. We updated the expiryDate (ie. Time to Live and then return the value tor the user)
              */
-            return model.findOneAndUpdate({key: key},{
-                $set: {expiryDate: new Date(Date.now() + EXPIRY_DURATION)}
-            }).then(res=>{
+            return model.findOneAndUpdate({
+                key: key
+            }, {
+                $set: {
+                    expiryDate: new Date(Date.now() + EXPIRY_DURATION)
+                }
+            }).then(res => {
                 return res.value
             });
 
@@ -58,32 +62,31 @@ const getAllCache = () => {
  */
 const addCache = (cacheObject) => {
 
-    // Check for max cache entries. If the cache entries are not exceeded or no data exist, carry on with the add
-    // This fails for empty db. will think up a new approach later
-    // model
-        model.find().then(response=>{
+    // Check for max cache entries. If the cache entries are not exceeded or no data
+    // exist, carry on with the add This fails for empty db. will think up a new
+    // approach later model
+    return model
+        .find()
+        .then(response => {
             if (_checkMaxCacheEntriesExceeded(response.length)) {
                 return false
             }
-            
             let cache = new model();
             cache.key = cacheObject.key;
             cache.value = cacheObject.value;
             cache.expiryDate = new Date(Date.now() + EXPIRY_DURATION);
-
             return cache
                 .save()
                 .then(res => {
-                    cacheCount++
-                    return res
+                    return res;
                 })
                 .catch(err => {
-                    return null
-                })
+                    return null;
+                });
         })
-        .catch(err=>{
+        .catch(err => {
             console.log(err)
-            return false
+            return false;
         })
 
 };

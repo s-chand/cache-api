@@ -10,6 +10,7 @@ class CacheController{
         let key = req.body.key;
         let value= req.body.value;
         addCache({key, value}).then(data =>{
+            console.log(data)
             if(!data || data === false){
                 return res.status(400).json({'response':'Max cache entries exceeded'})
             }
