@@ -12,26 +12,26 @@ const getCache = (key)=>{
         if(_checkExpiry(cache.expiryDate)){
             // Expired! Let's generate a new string
             const newValue = generateString();
-            cache.value = newValue;
-            cache.expiryDate = new Date(Date.now()+EXPIRY_DURATION);
-            newCache.save().then(respone =>{
+            model.update({key:key},{$set:{value: newValue, expiryDate:new Date(Date.now()+EXPIRY_DURATION)}}).exec()
+            .then(res=>{
                 return newValue;
             })
 
         }
-        console.log('Cache Hit!')
         return cache.value;
 
     })
     .catch(err => {
-        console.log(err)
         return null
     })
 };
 
 const getAllCache = () => {
     // Potentially we could paginate this data
-    return cacheModel.find({})
+    return model.find({}).then(caches=>{
+        return caches.map(cache => cache.key
+        );
+    })
 };
 /**
  * Adds a new cache entry to the store. 
@@ -74,5 +74,6 @@ const _checkExpiry = (date) => {
 
 module.exports = {
     getCache,
-    addCache
+    addCache,
+    getAllCache
 }

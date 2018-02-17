@@ -1,4 +1,4 @@
-const { getCache,addCache} = require('../utils/db');
+const { getCache,addCache, getAllCache} = require('../utils/db');
 class CacheController{
     /**
      * Adds a new cache entry using the supplied key value pair.
@@ -30,6 +30,14 @@ class CacheController{
         .catch(err=>{
             console.log('Cache miss!');
             res.status(404).json({'response':'Cache miss!'})
+        })
+    }
+    getAllCache(req, res){
+        getAllCache().then(caches=>{
+            res.status(200).json(caches);
+        })
+        .catch(err=>{
+            res.status(500).json(err);
         })
     }
     /**

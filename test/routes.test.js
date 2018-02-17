@@ -12,7 +12,7 @@ describe('Routes Tests: routes', () => {
         it('should return a string value representing the cache entry for the given key', () => {
             return chai
                 .request(app)
-                .get('/api/v1/cache/test')
+                .get('/api/v1/cache/key')
                 .then(res => {
                     expect(res.status)
                         .to
