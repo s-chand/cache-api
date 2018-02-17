@@ -16,7 +16,7 @@ class CacheController{
             return res.status(200).json({'response':'Success'})
         })
         .catch(err=>{
-            return res.status(500).json(err)
+            return res.status(500).json({'response':'An error occurred. Please try again'})
         })
     }
     /**
@@ -26,13 +26,16 @@ class CacheController{
      */
     getCacheHandler(req, res){
         const key = req.params.key;
-        getCache(key).then(data=>{
+       getCache(key).then(data=>{
+           if(!data){
+            console.log('Cache miss!');
+            return res.status(404).json({'response':'Cache miss!'})
+           }
             console.log('Cache Hit!');
             return res.status(200).json({'value':data})
         })
         .catch(err=>{
-            console.log('Cache miss!');
-            return res.status(404).json({'response':'Cache miss!'})
+            return res.status(500).json({'response':'An error occurred. Please try again'})
         })
     }
     getAllCache(req, res){
@@ -40,7 +43,7 @@ class CacheController{
             res.status(200).json(caches);
         })
         .catch(err=>{
-            res.status(500).json(err);
+            return res.status(500).json({'response':'An error occurred. Please try again'})
         })
     }
     /**
@@ -57,7 +60,7 @@ class CacheController{
             return res.status(200).json({'key': response})
         })
         .catch(err=>{
-            return res.status(500).json(err)
+            return res.status(500).json({'response':'An error occurred. Please try again'})
         })
 
     }
@@ -72,7 +75,7 @@ class CacheController{
             return res.status(200).json(response)
         })
         .catch(err=>{
-           return res.status(500).json(err)
+            return res.status(500).json({'response':'An error occurred. Please try again'})
         })
 
     }
@@ -86,7 +89,7 @@ class CacheController{
             return res.status(201).json({'response':'true'})
         })
         .catch(err=>{
-            return res.status(500).json(err)
+            return res.status(500).json({'response':'An error occurred. Please try again'})
         })
     }
 

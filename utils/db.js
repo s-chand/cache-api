@@ -3,8 +3,6 @@ const model = require('../models/cache');
 const {generateString} = require('./random-string-generator');
 const {EXPIRY_DURATION, MAX_CACHE_ENTRIES} = require('./constants');
 
-let cacheCount = 0; //naive solution, I know ;) (time factor)
-
 const getCache = (key) => {
     // const cacheModel = new model();
     return model
@@ -13,6 +11,9 @@ const getCache = (key) => {
             // check if the cache entry has expired if it hasn't, update the expiry date if
             // it has, generate a new cache value and update the expiry date. Return the
             // new value
+            if(!cache){
+                return null
+            }
             if (_checkExpiry(cache.expiryDate)) {
                 // Expired! Let's generate a new string
                 const newValue = generateString();
@@ -60,9 +61,8 @@ const addCache = (cacheObject) => {
     // Check for max cache entries. If the cache entries are not exceeded or no data exist, carry on with the add
     // This fails for empty db. will think up a new approach later
     // model
-    //     .count({})
-    //     .then(response => {
-            if (_checkMaxCacheEntriesExceeded(cacheCount)) {
+        model.find().then(response=>{
+            if (_checkMaxCacheEntriesExceeded(response.length)) {
                 return false
             }
             
@@ -80,7 +80,11 @@ const addCache = (cacheObject) => {
                 .catch(err => {
                     return null
                 })
-        //})
+        })
+        .catch(err=>{
+            console.log(err)
+            return false
+        })
 
 };
 const updateCache = (cache) => {
