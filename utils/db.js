@@ -51,7 +51,7 @@ const addCache = (cacheObject) => {
     })
 };
 const updateCache = (cache)=>{
-    return cacheModel.findOneAndUpdate(cache).then(response=>{
+    return model.findOneAndUpdate(cache).then(response=>{
 
     })
     .catch(err=>{

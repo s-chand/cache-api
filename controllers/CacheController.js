@@ -46,7 +46,8 @@ class CacheController{
      * @param {Response} res 
      */
     putCacheHandler(req, res){
-
+        const key = req.body.key;
+        const value = req.body.value;
     }
     /**
      * Deletes a cache entry
