@@ -8,6 +8,7 @@ chai.use(chaiHttp)
 const expect = chai.expect;
 
 describe('Routes Tests: routes', () => {
+    beforeEach()
     describe('Route: GET /api/v1/cache/:key ', () => {
         it('should return a string value representing the cache entry for the given key', () => {
             return chai

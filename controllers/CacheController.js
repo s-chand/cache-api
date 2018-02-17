@@ -10,6 +10,9 @@ class CacheController{
         let key = req.body.key;
         let value= req.body.value;
         addCache({key, value}).then(data =>{
+            if(!data || data === false){
+                return res.status(400).json({'response':'Max cache entries exceeded'})
+            }
             return res.status(200).json({'response':'Success'})
         })
         .catch(err=>{
@@ -29,7 +32,7 @@ class CacheController{
         })
         .catch(err=>{
             console.log('Cache miss!');
-            res.status(404).json({'response':'Cache miss!'})
+            return res.status(404).json({'response':'Cache miss!'})
         })
     }
     getAllCache(req, res){
@@ -51,10 +54,10 @@ class CacheController{
         updateCache({key, value})
         .then(response=>{
             if(!response) res.status(422).json(null)
-            res.status(200).json({'key': response})
+            return res.status(200).json({'key': response})
         })
         .catch(err=>{
-            res.status(500).json(err)
+            return res.status(500).json(err)
         })
 
     }
@@ -66,15 +69,25 @@ class CacheController{
     deleteCacheHandler(req, res){
         const key = req.params.key;
         deleteCache(key).then(response=>{
-            res.status(200).json(response)
+            return res.status(200).json(response)
         })
         .catch(err=>{
-            res.status(500).json(err)
+           return res.status(500).json(err)
         })
 
     }
+    /**
+     * 
+     * @param {Request} req 
+     * @param {Response} res 
+     */
     deleteAllCachesHandler(req, res){
-
+        deleteCache().then(response=>{
+            return res.status(201).json({'response':'true'})
+        })
+        .catch(err=>{
+            return res.status(500).json(err)
+        })
     }
 
 }
