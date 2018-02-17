@@ -1,7 +1,7 @@
 // All db queries come through this module
 const model = require('../models/cache');
 const {generateString} = require('./random-string-generator');
-const {EXPIRY_DURATION} = require('./constants');
+const {EXPIRY_DURATION, MAX_CACHE_ENTRIES} = require('./constants');
 
 const getCache = (key)=>{
     // const cacheModel = new model();
@@ -12,7 +12,7 @@ const getCache = (key)=>{
         if(_checkExpiry(cache.expiryDate)){
             // Expired! Let's generate a new string
             const newValue = generateString();
-            model.update({key:key},{$set:{value: newValue, expiryDate:new Date(Date.now()+EXPIRY_DURATION)}}).exec()
+            model.findOneAndUpdate({key:key},{$set:{value: newValue, expiryDate:new Date(Date.now()+EXPIRY_DURATION)}})
             .then(res=>{
                 return newValue;
             })
@@ -29,8 +29,7 @@ const getCache = (key)=>{
 const getAllCache = () => {
     // Potentially we could paginate this data
     return model.find({}).then(caches=>{
-        return caches.map(cache => cache.key
-        );
+        return caches.map(cache => cache.key);
     })
 };
 /**
@@ -38,6 +37,8 @@ const getAllCache = () => {
  * @param {Object} cacheObject - has a structure of {'key':'value'}
  */
 const addCache = (cacheObject) => {
+
+    // Check for max cache entries
     let cache = new model();
     cache.key = cacheObject.key;
     cache.value= cacheObject.value;
@@ -51,14 +52,24 @@ const addCache = (cacheObject) => {
     })
 };
 const updateCache = (cache)=>{
-    return model.findOneAndUpdate(cache).then(response=>{
-
+    return model.findOneAndUpdate({key: cache.key}, {value: cache.value}).then(response=>{
+        return response.key
     })
     .catch(err=>{
-
+        return null
     });
 };
-  
+
+const deleteCache = (key) => {
+    return model.findOneAndRemove({key:key}).then(response=>{
+        console.log(response)
+        return response
+    })
+    .catch(err=>{
+        console.log(err)
+        return null
+    })
+}
 
 const _checkExpiry = (date) => {
     const expiryDate = new Date(date)
@@ -71,9 +82,14 @@ const _checkExpiry = (date) => {
         return false
     }
 };
+const _checkMaxCacheEntries = () =>{
+    
+}
 
 module.exports = {
     getCache,
     addCache,
-    getAllCache
+    getAllCache,
+    updateCache,
+    deleteCache
 }

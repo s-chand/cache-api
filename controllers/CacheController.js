@@ -1,4 +1,4 @@
-const { getCache,addCache, getAllCache} = require('../utils/db');
+const { getCache,addCache, getAllCache, updateCache, deleteCache} = require('../utils/db');
 class CacheController{
     /**
      * Adds a new cache entry using the supplied key value pair.
@@ -46,8 +46,17 @@ class CacheController{
      * @param {Response} res 
      */
     putCacheHandler(req, res){
-        const key = req.body.key;
+        const key = req.params.key;
         const value = req.body.value;
+        updateCache({key, value})
+        .then(response=>{
+            if(!response) res.status(422).json(null)
+            res.status(200).json({'key': response})
+        })
+        .catch(err=>{
+            res.status(500).json(err)
+        })
+
     }
     /**
      * Deletes a cache entry
@@ -55,8 +64,19 @@ class CacheController{
      * @param {Response} res 
      */
     deleteCacheHandler(req, res){
+        const key = req.params.key;
+        deleteCache(key).then(response=>{
+            res.status(200).json(response)
+        })
+        .catch(err=>{
+            res.status(500).json(err)
+        })
 
     }
+    deleteAllCachesHandler(req, res){
+
+    }
+
 }
 
 module.exports = CacheController
