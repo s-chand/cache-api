@@ -1,9 +1,18 @@
-var express = require('express');
-var router = express.Router();
+const express = require('express');
+// validation
+const {buildSanitizeFunction} = require('express-validator/filter');
+const sanitizer = buildSanitizeFunction(["body","query"]);
 
-/* GET home page. */
-router.get('/', function(req, res, next) {
-  res.render('index', { title: 'Express' });
-});
+// cacheController
+const controller = require('../controllers/CacheController');
+const cacheController = new controller()
+
+const router = express.Router();
+
+/**
+ * GET cache
+ */
+router.get('/cache/:key', sanitizer('key').trim(), (req,res) => cacheController.getCacheHandler(req, res));
+router.post('/cache',(req, res)=>cacheController.addCacheHandler(req, res));
 
 module.exports = router;

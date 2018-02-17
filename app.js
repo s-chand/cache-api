@@ -1,13 +1,22 @@
-var express = require('express');
-var path = require('path');
-var favicon = require('serve-favicon');
-var logger = require('morgan');
-var cookieParser = require('cookie-parser');
-var bodyParser = require('body-parser');
+const express = require('express');
+const path = require('path');
+const favicon = require('serve-favicon');
+const logger = require('morgan');
+const cookieParser = require('cookie-parser');
+const bodyParser = require('body-parser');
 
-var index = require('./routes/index');
+const index = require('./routes/index');
 
-var app = express();
+//Db connection setup
+const config = require('./utils/config')
+const mongoose = require('mongoose');
+mongoose.Promise = global.Promise;
+mongoose.connect(`mongodb://${config.mongo.host}:${config.mongo.port}/${config.mongo.db}`, () => {
+    if (!mongoose.connection.readyState) {
+        console.log('There is an issue with our mongodb connection');
+    }
+});
+const app = express();
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -21,11 +30,15 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/', index);
+// Route Prefix
+app.use('/api/v1', index);
+app.get('/', function(req, res, next) {
+  res.render('index', { title: 'Express' });
+});
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
-  var err = new Error('Not Found');
+  const err = new Error('Not Found');
   err.status = 404;
   next(err);
 });

@@ -11,14 +11,14 @@ describe(' Server: App.js', ()=> {
     it('should return 200 for the index route', ()=>{
         return chai.request(app).get('/')
         .then(res => {
-            expect(res.status).to.eql(200)
+            expect(res.status).to.eql(200);
         });
     });
     it('should return a 404 for non existing routes', ()=>{
         return chai.request(app).get('/non-existing-route')
         .catch(err => {
-            expect(err).to.not.be.eql(null)
-            expect(err.status).to.eql(404)
+            expect(err).to.not.be.eql(null);
+            expect(err.status).to.eql(404);
         })
         ;
     });
