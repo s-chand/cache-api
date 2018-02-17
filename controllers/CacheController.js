@@ -10,11 +10,10 @@ class CacheController{
         let key = req.body.key;
         let value= req.body.value;
         addCache({key, value}).then(data =>{
-            console.log(data)
             if(!data || data === false){
                 return res.status(400).json({'response':'Max cache entries exceeded'})
             }
-            return res.status(200).json({'response':'Success'})
+            return res.status(201).json({'response':'Success'})
         })
         .catch(err=>{
             return res.status(500).json({'response':'An error occurred. Please try again'})
@@ -73,7 +72,7 @@ class CacheController{
     deleteCacheHandler(req, res){
         const key = req.params.key;
         deleteCache(key).then(response=>{
-            return res.status(200).json(response)
+            return res.status(201).json(response)
         })
         .catch(err=>{
             return res.status(500).json({'response':'An error occurred. Please try again'})
