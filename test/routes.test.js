@@ -2,17 +2,30 @@ const mocha = require('mocha');
 const chai = require('chai');
 const chaiHttp = require('chai-http');
 
+// Get the db and be sure data ecists for tests
+
+
+
 let app = require('../app');
 
 chai.use(chaiHttp)
 const expect = chai.expect;
 
 describe('Routes Tests: routes', () => {
+    // beforeEach(()=>{
+    //     return chai
+    //             .request(app)
+    //             .post('/api/v1/cache')
+    //             .send({'key':'test','value':'test'})
+    //             .then(res=>{
+    //                 return res
+    //             })
+    // })
     describe('Route: GET /api/v1/cache/:key ', () => {
         it('should return a string value representing the cache entry for the given key', () => {
             return chai
                 .request(app)
-                .get('/api/v1/cache/key')
+                .get('/api/v1/cache/test')
                 .then(res => {
                     expect(res.status)
                         .to
@@ -26,9 +39,18 @@ describe('Routes Tests: routes', () => {
     });
     describe('Route: GET /api/v1/cache ', () => {
         it('should return an array of all cache keys', ()=>{
-            
+            return chai
+                .request(app)
+                .get('/api/v1/cache')
+                .then(res => {
+                    expect(res.status)
+                        .to
+                        .eql(200);
+                    expect(res.body).length.to.be.greaterThan(0)
+                });
+            })
         })
-    });
+
     describe('Route: POST /api/v1/cache', () => {
         it('should post a new cache entry')
     })
