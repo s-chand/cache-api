@@ -112,8 +112,7 @@ describe('Routes Tests: routes', () => {
             .then(res => {
                 expect(res.status)
                     .to
-                    .eql(201);
-                // expect(res.body).to.be.have.property("key", "test")
+                    .eql(200);
             }); 
         })
     })
@@ -125,8 +124,7 @@ describe('Routes Tests: routes', () => {
             .then(res => {
                 expect(res.status)
                     .to
-                    .eql(201);
-                // expect(res.body).to.be.have.property("key", "test")
+                    .eql(200);
             });  
         })
     })

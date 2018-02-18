@@ -72,7 +72,7 @@ class CacheController{
     deleteCacheHandler(req, res){
         const key = req.params.key;
         deleteCache(key).then(response=>{
-            return res.status(201).json(response)
+            return res.status(200).json(response)
         })
         .catch(err=>{
             return res.status(500).json({'response':'An error occurred. Please try again'})
@@ -86,7 +86,7 @@ class CacheController{
      */
     deleteAllCachesHandler(req, res){
         deleteCache().then(response=>{
-            return res.status(201).json({'response':'true'})
+            return res.status(200).json({'response':'true'})
         })
         .catch(err=>{
             return res.status(500).json({'response':'An error occurred. Please try again'})
