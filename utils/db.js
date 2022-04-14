@@ -78,7 +78,7 @@ const addCache = (cacheObject) => {
             return cache
                 .save()
                 .then(res => {
-                    return res;
+                    return res.key;
                 })
                 .catch(err => {
                     return null;
@@ -117,11 +117,11 @@ const deleteCache = (key) => {
     return model
         .findOneAndRemove({key: key})
         .then(response => {
-            return response.length
+            return response.length;
         })
         .catch(err => {
-            console.log(err)
-            return null
+            console.log(err);
+            return null;
         })
 }
 
